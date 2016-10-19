@@ -161,7 +161,11 @@ out_file_name_fallback( OutFileName, BaseFileName ) ->
 %% settings/1
 %% @doc Generates profiling settings based on whether profiling should be on or off.
 %% The output file name is set to the default. 
--spec settings( DoProfiling ) -> ProfilingSettings when DoProfiling :: boolean().
+-spec settings( DoProfiling ) -> ProfilingSettings 
+when 
+  DoProfiling :: boolean(),
+  ProfilingSettings :: profilingsettings().
+
 settings( DoProfiling ) ->
   % get the default for the profile file parameter
   {profile_file, _short, _long, {string, DefaultOutName}, _desc} = lists:keyfind( profile_file, 1, effi:get_optspec_lst()),
@@ -192,7 +196,7 @@ when is_atom( DoProfiling ),
 -spec is_on( ProfilingSettings ) -> boolean() 
 when ProfilingSettings :: profilingsettings().
 
-is_on( {profiling, DoProfiling, Filename } ) ->
+is_on( {profiling, DoProfiling, _Filename } ) ->
 %  IsDefaultFileName = case out_file_name_fallback( Filename, Filename ) of
 %    {refactored, _} -> true;
 %    {unchanged, _} -> false
@@ -258,6 +262,5 @@ out_file_name_fallback_test_() ->
     ?_assertEqual({refactored, "./path/to/request_file_profile.xml"}, out_file_name_fallback("<requestfile>_profile.xml", "./path/to/request_file")), 
     ?_assertEqual({unchanged, "./path/to/profile.xml"}, out_file_name_fallback("./path/to/profile.xml", "./path/to/request_file"))
   ].
-
 
 -endif.
