@@ -158,6 +158,15 @@ out_file_name_fallback( OutFileName, BaseFileName ) ->
       {unchanged, OutFileName}
   end.
 
+%% settings/1
+%% @doc Generates profiling settings based on whether profiling should be on or off.
+%% The output file name is set to the default. 
+-spec settings( DoProfiling ) -> ProfilingSettings when DoProfiling :: boolean().
+settings( DoProfiling ) ->
+  % get the default for the profile file parameter
+  {profile_file, _short, _long, {string, DefaultOutName}, _desc} = lists:keyfind( profile_file, 1, effi:get_optspec_lst()),
+  get_profiling_settings( DoProfiling, DefaultOutName ).
+
 %% get_profiling_settings/2
 %% @doc Generates a profiling settings data structure, by explicitly setting 
 %% profiling to true or false and specifying the profile output name
@@ -178,11 +187,17 @@ when is_atom( DoProfiling ),
   end.
 
 %% is_on/1
-%% @doc Extract whether profiling is on or off from the profiling settings data structure
+%% @doc Extract whether profiling is on or off from the profiling settings data structure.
+%% Returns true also if a non-default profile file name is given.
 -spec is_on( ProfilingSettings ) -> boolean() 
 when ProfilingSettings :: profilingsettings().
 
-is_on( {profiling, DoProfiling, _Filename } ) ->
+is_on( {profiling, DoProfiling, Filename } ) ->
+%  IsDefaultFileName = case out_file_name_fallback( Filename, Filename ) of
+%    {refactored, _} -> true;
+%    {unchanged, _} -> false
+%  end,
+%  DoProfiling or not IsDefaultFileName
   DoProfiling.
 
 %% out_file/1
