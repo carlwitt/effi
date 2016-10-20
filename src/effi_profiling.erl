@@ -55,7 +55,7 @@
 %% API export
 %% ------------------------------------------------------------
 
--export( [get_profiling_settings_from_commandline_args/2, get_profiling_settings/2, 
+-export( [get_profiling_settings_from_commandline_args/2, get_profiling_settings/2, settings/1,
           is_on/1, out_file/1, 
           wrapper_call/1, effi_arguments_for/1 ] ).
 
@@ -262,5 +262,9 @@ out_file_name_fallback_test_() ->
     ?_assertEqual({refactored, "./path/to/request_file_profile.xml"}, out_file_name_fallback("<requestfile>_profile.xml", "./path/to/request_file")), 
     ?_assertEqual({unchanged, "./path/to/profile.xml"}, out_file_name_fallback("./path/to/profile.xml", "./path/to/request_file"))
   ].
+
+settings_test_() ->
+  Prof = settings( false ),
+  ?_assertEqual(false, is_on( Prof )).
 
 -endif.
